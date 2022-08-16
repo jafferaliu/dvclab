@@ -11,7 +11,7 @@ jobs:
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          pip install -r requirements.txt
+          pip install -r requirments.txt
           python train.py
 
           cat metrics.txt >> report.md
