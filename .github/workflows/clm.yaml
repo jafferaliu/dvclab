@@ -1,0 +1,32 @@
+name: my dvc lab 
+on: [push]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    #container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    env:
+      PROJECT_ID: ordinal-nucleus-353010
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: iterative/setup-cml@v1
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.SERVICE_ACCOUNT_KEY }}'
+      - name: Train model
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          pip install 'dvc[gs]'
+          dvc pull 
+          ls -l 
+          pip install -r requirments.txt
+          python train.py
+          echo "cml start"
+          echo "Model Metrics" > report.md
+          cat metrics.txt >> report.md
+          cml publish residuals.png --md >> report.md
+          cml send-comment report.md
