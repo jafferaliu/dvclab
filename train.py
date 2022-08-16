@@ -34,6 +34,9 @@ with open("metrics.txt", 'w') as outfile:
         outfile.write("Training variance explained: %2.1f%%\n" % train_score)
         outfile.write("Test variance explained: %2.1f%%\n" % test_score)
 
+
+print("train completed")
+
 ##########################################
 ##### PLOT FEATURE IMPORTANCE ############
 ##########################################
