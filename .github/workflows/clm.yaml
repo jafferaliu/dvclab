@@ -22,6 +22,7 @@ jobs:
         run: |
           pip install 'dvc[gs]'
           dvc pull 
+          ls -l 
           pip install -r requirments.txt
           python train.py
 
