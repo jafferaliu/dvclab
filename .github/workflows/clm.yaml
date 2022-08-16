@@ -3,13 +3,13 @@ on: [push]
 jobs:
   run:
     runs-on: ubuntu-latest
+    #container: docker://ghcr.io/iterative/cml:0-dvc2-base1
     env:
       PROJECT_ID: ordinal-nucleus-353010
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
       - uses: iterative/setup-cml@v1
-      - uses: 'actions/checkout@v3'
 
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
@@ -28,6 +28,6 @@ jobs:
           echo "cml start"
           echo "Model Metrics" >> report.md
           cat metrics.txt  >> report.md
-          cml-publish feature_importance.png >> report.md
-          cml-publish residuals.png >> report.md
-          cml-send-comment  >> report.md
+          cml publish feature_importance.png >> report.md
+          cml publish residuals.png >> report.md
+          cml send-comment  >> report.md
