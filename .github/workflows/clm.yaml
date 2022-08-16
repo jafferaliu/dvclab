@@ -11,6 +11,8 @@ jobs:
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          pip install 'dvc[gs]'
+          dvc pull 
           pip install -r requirments.txt
           python train.py
 
