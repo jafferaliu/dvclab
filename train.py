@@ -10,13 +10,15 @@ seed = 42
 
 df = pd.read_csv('winequalityN.csv')
 
-df.update(df.fillna(df.mean()))
+#df = df.fillna(df.mean())
 
-df_n = pd.get_dummies(df,drop_first = True)
+df = df.dropna()
 
-y = df_n.pop("quality")
+df = pd.get_dummies(df,drop_first = True)
 
-X_train, X_test, y_train, y_test = train_test_split(df_n, y, test_size=0.2, random_state=seed)
+y = df.pop("quality")
+
+X_train, X_test, y_train, y_test = train_test_split(df, y, test_size=0.2, random_state=seed)
 
 regr = RandomForestRegressor(max_depth=2, random_state=seed)
 
@@ -37,7 +39,7 @@ with open("metrics.txt", 'w') as outfile:
 ##########################################
 # Calculate feature importance in random forest
 importances = regr.feature_importances_
-labels = df_n.columns
+labels = df.columns
 feature_df = pd.DataFrame(list(zip(labels, importances)), columns = ["feature","importance"])
 feature_df = feature_df.sort_values(by='importance', ascending=False,)
 
