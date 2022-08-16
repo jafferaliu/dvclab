@@ -1,20 +1,31 @@
-name: MY LAB CICD No#1
+name: my dvc lab 
 on: [push]
 jobs:
   run:
     runs-on: ubuntu-latest
-    # optionally use a convenient Ubuntu LTS + DVC + CML image
-    container: docker://dvcorg/cml-py3:latest
+    env:
+      PROJECT_ID: ordinal-nucleus-353010
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: iterative/setup-cml@v1
+      - uses: 'actions/checkout@v3'
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.SERVICE_ACCOUNT_KEY }}'
       - name: Train model
-        run: |
-          # Your ML workflow goes here
-          pip install -r requirements.txt
-          python train.py
-      - name: Write CML report
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Post reports as comments in GitHub PRs
+          pip install 'dvc[gs]'
+          dvc pull 
+          ls -l 
+          pip install -r requirments.txt
+          python train.py
+
           cat metrics.txt >> report.md
+          cml publish plot.png --md >> report.md
+          cml send-comment report.md
